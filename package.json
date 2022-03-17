@@ -1,0 +1,29 @@
+{
+  "name": "products-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpp33-sdc-daisy/products-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpp33-sdc-daisy/products-service/issues"
+  },
+  "homepage": "https://github.com/rpp33-sdc-daisy/products-service#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "node": "^17.7.1",
+    "nodemon": "^2.0.15"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
+  }
+}
