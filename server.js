@@ -26,9 +26,11 @@ client.connect();
 
 // COPY styles (id, product_id, name, sale_price, original_price, default_style) from '/Users/alyshagilliard/Downloads/styles.csv' WITH (FORMAT csv, HEADER);
 
-// const stylesQuery = 'CREATE TABLE styles (id serial PRIMARY KEY, name VARCHAR(50), sale_price VARCHAR(50), original_price VARCHAR(50), product_id serial, default_style VARCHAR(1))';
+// const photosQuery = 'CREATE TABLE photos (id serial PRIMARY KEY, style_id serial, thumbnail_url VARCHAR, url VARCHAR)';
 
-client.query(stylesQuery, (err, res) => {
+// COPY photos (id, style_id, thumbnail_url, url) from '/Users/alyshagilliard/Downloads/photos.csv' WITH (FORMAT csv, HEADER);
+
+client.query(photosQuery, (err, res) => {
   // Hello World!
   client.end();
 });
