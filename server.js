@@ -30,10 +30,14 @@ client.connect();
 
 // COPY photos (id, style_id, thumbnail_url, url) from '/Users/alyshagilliard/Downloads/photos.csv' WITH (FORMAT csv, HEADER);
 
-client.query(photosQuery, (err, res) => {
-  // Hello World!
-  client.end();
-});
+// const skusQuery = 'CREATE TABLE skus (id serial PRIMARY KEY, style_id serial, size VARCHAR(8), quantity INT)';
+
+// COPY skus (id, style_id, size, quantity) from '/Users/alyshagilliard/Downloads/skus.csv' WITH (FORMAT csv, HEADER);
+
+// client.query(skusQuery, (err, res) => {
+
+//   client.end();
+// });
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
