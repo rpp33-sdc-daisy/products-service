@@ -5,6 +5,10 @@ const productsQuery = 'CREATE TABLE products (product_id serial PRIMARY KEY, pro
 
 const productsImportQuery = 'COPY products (product_name, slogan, description, category, default_price) from "/Users/alyshagilliard/Downloads/product.csv" WITH (FORMAT csv,HEADER)';
 
+const getAllProducts = 'SELECT * from products';
+
+const getProduct = (productId) => `SELECT * FROM products INNER JOIN features ON features.product_id=products.id WHERE products.id=${productId}`;
+
 /* Features table queries */
 const featuresQuery = 'CREATE TABLE features (id serial PRIMARY KEY, feature VARCHAR(50), product_id serial, value VARCHAR(50))';
 
@@ -24,3 +28,7 @@ const photosImportQuery = 'COPY photos (id, style_id, thumbnail_url, url) from "
 const skusQuery = 'CREATE TABLE skus (id serial PRIMARY KEY, style_id serial, size VARCHAR(8), quantity INT)';
 
 const skusImportQuery = 'COPY skus (id, style_id, size, quantity) from "/Users/alyshagilliard/Downloads/skus.csv" WITH (FORMAT csv, HEADER)';
+
+const getStyles = (productId) => `SELECT * FROM styles WHERE product_id=${productId}`;
+
+export { getAllProducts, getProduct, getStyles };
