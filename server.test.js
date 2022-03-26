@@ -1,7 +1,13 @@
-function sum(num1, num2) {
-  return num1 + num2;
-}
+const request = require('supertest');
+const app = require('./server.js');
 
-test('adds 2 + 2 equals 4', () => {
-  expect(sum(2, 2)).toBe(4);
+describe('GET /products', () => {
+  test('GET /products return 200', async () => {
+    await request(app)
+      .get('/products')
+      .expect(200)
+      .end((err, res) => {
+        console.log(err);
+      });
+  });
 });
