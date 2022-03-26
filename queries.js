@@ -31,4 +31,6 @@ const skusImportQuery = 'COPY skus (id, style_id, size, quantity) from "/Users/a
 
 const getStyles = (productId) => `SELECT * FROM styles WHERE product_id=${productId}`;
 
-export { getAllProducts, getProduct, getStyles };
+exports.getAllProducts = getAllProducts;
+exports.getProduct = getProduct;
+exports.getStyles = getStyles;
