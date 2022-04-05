@@ -7,7 +7,40 @@ describe('Products API Unit Tests', () => {
       .get('/products')
       .expect(200)
       .end((err, res) => {
-        console.log(err);
+        if (err) console.log(err);
+        const products = res.body;
+        const product = res.body[0];
+
+        /* PRODUCTS */
+        expect(typeof products).toBe('array');
+        expect(typeof product).toBe('object');
+
+        const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features', 'styles'];
+        productProperties.forEach((productProperty) => {
+          expect(product).toHaveProperty(productProperty);
+        });
+
+        /* STYLES */
+        expect(typeof product.styles).toBe('array');
+        const styleProperties = ['style_id', 'name', 'original_price', 'sale_price', 'photos', 'skus'];
+        styleProperties.forEach((styleProperty) => {
+          expect(product.styles).toHaveProperty(styleProperty);
+        });
+        expect(typeof product.styles.photos).toBe('array');
+
+        /* SKUS */
+        expect(typeof product.styles.skus).toBe('array');
+        const skusProperties = ['sku_id', 'quantity', 'size'];
+        skusProperties.forEach((skusProperty) => {
+          expect(product.styles.skus).toHaveProperty(skusProperty);
+        });
+
+        /* FEATURES */
+        expect(typeof product.features).toBe('array');
+        const featuresProperties = ['feature', 'value'];
+        featuresProperties.forEach((featureProperty) => {
+          expect(product.features).toHaveProperty(featureProperty);
+        });
       });
   });
 
