@@ -12,6 +12,8 @@ const getProduct = (productId) => `SELECT * FROM products INNER JOIN features ON
 /* Features table queries */
 const featuresQuery = 'CREATE TABLE features (id serial PRIMARY KEY, feature VARCHAR(50), product_id serial, value VARCHAR(50))';
 
+const getAllFeatures = 'SELECT * from features';
+
 const featuresImportQuery = 'COPY features (id, product_id, feature, value) from /Users/alyshagilliard/Downloads/features.csv" WITH (FORMAT csv, HEADER)';
 
 /* Styles table queries */
