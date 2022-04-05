@@ -1,7 +1,9 @@
 const express = require('express');
 const { Client } = require('pg');
 
-const { getAllProducts, getProduct, getStyles } = require('./queries.js');
+const {
+  getAllProducts, getProduct, getStyles, getAllFeatures,
+} = require('./queries.js');
 
 // http://127.0.0.1:8080/
 const client = new Client({
@@ -18,11 +20,20 @@ client.connect();
 
 // GET /products Retrieves the list of products.
 app.get('/products', (req, res) => {
-  console.log('hey');
+  let products = {};
   client.query(getAllProducts)
-    .then((queryResponse) => {
+    .then((productsResponse) => {
+      products = productsResponse.rows;
+    })
+    .catch((err) => {
+      console.log('Error recieved when retrieving all products', err);
+      res.send(404);
+    });
+
+  client.query(getAllFeatures)
+    .then((featuresResponse) => {
+      console.log(featuresResponse.rows);
       client.end();
-      console.log(queryResponse.rows[0]);
       res.send();
     })
     .catch((err) => {

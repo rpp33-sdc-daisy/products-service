@@ -36,3 +36,4 @@ const getStyles = (productId) => `SELECT * FROM styles WHERE product_id=${produc
 exports.getAllProducts = getAllProducts;
 exports.getProduct = getProduct;
 exports.getStyles = getStyles;
+exports.getAllFeatures = getAllFeatures;
