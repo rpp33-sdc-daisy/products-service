@@ -6,7 +6,7 @@ describe('Products API Unit Tests', () => {
     await request(app)
       .get('/products')
       .expect(200)
-      .end((err, res) => {
+      .then((err, res) => {
         if (err) console.log(err);
         const products = res.body;
         const product = res.body[0];
@@ -33,6 +33,9 @@ describe('Products API Unit Tests', () => {
         featuresProperties.forEach((featureProperty) => {
           expect(product.features).toHaveProperty(featureProperty);
         });
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
       });
   });
 
@@ -40,7 +43,7 @@ describe('Products API Unit Tests', () => {
     await request(app)
       .get('/products/45')
       .expect(200)
-      .end((err, res) => {
+      .then((err, res) => {
         if (err) console.log(err);
         const product = res.body;
 
@@ -66,6 +69,9 @@ describe('Products API Unit Tests', () => {
         featuresProperties.forEach((featureProperty) => {
           expect(product.features).toHaveProperty(featureProperty);
         });
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
       });
   });
 
@@ -73,7 +79,7 @@ describe('Products API Unit Tests', () => {
     await request(app)
       .get('/products/45/styles')
       .expect(200)
-      .end((err, res) => {
+      .then((err, res) => {
         const styles = res.body;
 
         /* STYLES */
@@ -89,6 +95,9 @@ describe('Products API Unit Tests', () => {
         skusProperties.forEach((skusProperty) => {
           expect(styles).toHaveProperty(skusProperty);
         });
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
       });
   });
 });
