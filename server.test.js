@@ -2,17 +2,19 @@ const request = require('supertest');
 const { app } = require('./server.js');
 
 describe('Products API Unit Tests', () => {
+  beforeEach(() => {
+    jest.setTimeout(10000);
+  });
   test('GET /products retrieves a list of products', async () => {
     await request(app)
       .get('/products')
       .expect(200)
-      .then((err, res) => {
-        if (err) console.log(err);
-        const products = res.body;
-        const product = res.body[0];
+      .then((res) => {
+        const products = JSON.parse(res.res.text);
+        const product = products[0];
 
         /* PRODUCTS */
-        expect(typeof products).toBe('array');
+        expect(Array.isArray(products)).toBe(true);
         expect(typeof product).toBe('object');
 
         const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features', 'styles'];
@@ -21,7 +23,7 @@ describe('Products API Unit Tests', () => {
         });
 
         /* STYLES */
-        expect(typeof product.styles).toBe('array');
+        expect(Array.isArray(product.styles)).toBe(true);
         expect(typeof product.styles.photos).toBe('array');
 
         /* SKUS */
