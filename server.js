@@ -20,19 +20,14 @@ client.connect();
 
 // GET /products Retrieves the list of products.
 app.get('/products', (req, res) => {
-  let products = {};
-  client.query(getAllProducts)
-    .then((productsResponse) => {
-      products = productsResponse.rows;
-    })
-    .catch((err) => {
-      console.log('Error recieved when retrieving all products', err);
-      res.send(404);
-    });
-
-  client.query(getAllFeatures)
-    .then((featuresResponse) => {
-      console.log(featuresResponse.rows);
+  Promise.all([client.query(getAllProducts), client.query(getAllFeatures)])
+    .then((response) => {
+      const products = response[0].rows;
+      const features = response[1].rows;
+      // for (let product of products) {
+      //   product.feature =
+      // }
+      console.log(products[0]);
       client.end();
       res.send();
     })

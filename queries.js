@@ -5,7 +5,7 @@ const productsQuery = 'CREATE TABLE products (product_id serial PRIMARY KEY, pro
 
 const productsImportQuery = 'COPY products (product_name, slogan, description, category, default_price) from "/Users/alyshagilliard/Downloads/product.csv" WITH (FORMAT csv,HEADER)';
 
-const getAllProducts = 'SELECT * from products';
+const getAllProducts = "SELECT products.*, json_agg(json_build_object('id', features.id, 'feature', features.feature, 'value', features.value)) AS features from products JOIN features ON products.id=features.product_id GROUP BY products.id;";
 
 const getProduct = (productId) => `SELECT * FROM products INNER JOIN features ON features.product_id=products.id WHERE products.id=${productId}`;
 
