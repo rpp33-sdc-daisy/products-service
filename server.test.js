@@ -51,7 +51,7 @@ describe('Products API Unit Tests', () => {
         });
 
         /* FEATURES */
-        expect(typeof product.features).toBe('array');
+        expect(Array.isArray(product.features)).toBe(true);
         const featuresProperties = ['feature', 'value'];
         featuresProperties.forEach((featureProperty) => {
           expect(product.features).toHaveProperty(featureProperty);
@@ -70,14 +70,14 @@ describe('Products API Unit Tests', () => {
         const styles = res.body;
 
         /* STYLES */
-        expect(typeof styles).toBe('array');
+        expect(Array.isArray(styles)).toBe(true);
         const styleProperties = ['style_id', 'name', 'original_price', 'sale_price', 'photos', 'skus'];
         styleProperties.forEach((styleProperty) => {
           expect(styles).toHaveProperty(styleProperty);
         });
 
         /* SKUS */
-        expect(typeof styles.skus).toBe('array');
+        expect(Array.isArray(styles.skus)).toBe(true);
         const skusProperties = ['sku_id', 'quantity', 'size'];
         skusProperties.forEach((skusProperty) => {
           expect(styles).toHaveProperty(skusProperty);
