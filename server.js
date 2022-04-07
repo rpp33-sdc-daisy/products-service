@@ -1,10 +1,6 @@
 const express = require('express');
 const { Client } = require('pg');
 
-const {
-  getProduct, getStyles, getAllFeatures,
-} = require('./queries.js');
-
 // http://127.0.0.1:8080/
 const client = new Client({
   host: '127.0.0.1',
