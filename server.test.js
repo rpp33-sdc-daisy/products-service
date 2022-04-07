@@ -3,7 +3,7 @@ const { app } = require('./server.js');
 
 describe('Products API Unit Tests', () => {
   beforeEach(() => {
-    jest.setTimeout(10000);
+
   });
   test('GET /products retrieves a list of products', async () => {
     await request(app)
@@ -17,23 +17,16 @@ describe('Products API Unit Tests', () => {
         expect(Array.isArray(products)).toBe(true);
         expect(typeof product).toBe('object');
 
-        const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features', 'styles'];
+        const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
         productProperties.forEach((productProperty) => {
           expect(product).toHaveProperty(productProperty);
         });
 
-        /* STYLES */
-        expect(Array.isArray(product.styles)).toBe(true);
-        expect(typeof product.styles.photos).toBe('array');
-
-        /* SKUS */
-        expect(typeof product.styles.skus).toBe('array');
-
         /* FEATURES */
-        expect(typeof product.features).toBe('array');
+        expect(Array.isArray(product.features)).toBe(true);
         const featuresProperties = ['feature', 'value'];
         featuresProperties.forEach((featureProperty) => {
-          expect(product.features).toHaveProperty(featureProperty);
+          expect(product.features[0]).toHaveProperty(featureProperty);
         });
       })
       .catch((err) => {
