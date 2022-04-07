@@ -43,20 +43,12 @@ describe('Products API Unit Tests', () => {
         const product = res.body;
 
         /* PRODUCTS */
-        expect(typeof products).toBe('array');
         expect(typeof product).toBe('object');
 
-        const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features', 'styles'];
+        const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
         productProperties.forEach((productProperty) => {
           expect(product).toHaveProperty(productProperty);
         });
-
-        /* STYLES */
-        expect(typeof product.styles).toBe('array');
-        expect(typeof product.styles.photos).toBe('array');
-
-        /* SKUS */
-        expect(typeof product.styles.skus).toBe('array');
 
         /* FEATURES */
         expect(typeof product.features).toBe('array');
