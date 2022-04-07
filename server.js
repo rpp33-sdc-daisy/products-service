@@ -21,9 +21,8 @@ app.get('/products', (req, res) => {
   const getAllProducts = `SELECT products.*, json_agg(json_build_object('id', features.id, 'feature', features.feature, 'value', features.value)) AS features from products JOIN features ON products.product_id=features.product_id GROUP BY products.product_id LIMIT ${count} OFFSET ${page};`;
   client.query(getAllProducts)
     .then((response) => {
-      const products = response.rows;
       client.end();
-      res.send(products);
+      res.send(response.rows);
     })
     .catch((err) => {
       console.log('Error recieved when retrieving all products', err);
