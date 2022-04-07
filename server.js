@@ -38,8 +38,9 @@ app.get('/products', (req, res) => {
 // GET /products/:product_id/styles
 // Returns the all styles available for the given product.
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
 exports.app = app;
+exports.server = server;

@@ -1,9 +1,9 @@
 const request = require('supertest');
-const { app } = require('./server.js');
+const { app, server } = require('./server.js');
 
 describe('Products API Unit Tests', () => {
-  beforeEach(() => {
-
+  afterAll(() => {
+    server.close();
   });
   test('GET /products retrieves a list of products', async () => {
     await request(app)
