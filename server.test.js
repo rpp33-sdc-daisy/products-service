@@ -20,24 +20,50 @@ describe('GET /products retrieves a list of products', () => {
         expect(err).toBe(undefined);
       });
   });
-  test('products data has correct properties and data types', async () => {
+  test('products data is an array', async () => {
     expect(Array.isArray(products)).toBe(true);
+  });
+  test('product data is an object', async () => {
     expect(typeof product).toBe('object');
-
+  });
+  test('product data has the expected properties', async () => {
     const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
     productProperties.forEach((productProperty) => {
       expect(product).toHaveProperty(productProperty);
     });
   });
 
-  test('features data has correct properties and data types', async () => {
+  test('product features is an array', async () => {
     expect(Array.isArray(product.features)).toBe(true);
     const featuresProperties = ['feature', 'value'];
     featuresProperties.forEach((featureProperty) => {
       expect(product.features[0]).toHaveProperty(featureProperty);
     });
   });
+  test('product features has the expected properties', async () => {
+    const featuresProperties = ['feature', 'value'];
+    featuresProperties.forEach((featureProperty) => {
+      expect(product.features[0]).toHaveProperty(featureProperty);
+    });
+  });
 });
+
+// describe(() => {
+//   let products;
+//   let product;
+//   beforeAll(async () => {
+//     await request(app)
+//       .get('/products')
+//       .expect(200)
+//       .then((res) => {
+//         products = JSON.parse(res.res.text);
+//         [product] = products;
+//       })
+//       .catch((err) => {
+//         expect(err).toBe(undefined);
+//       });
+//   });
+// });
 // test('GET /products/:product_id returns all product level information for a specified product id', async () => {
 //   await request(app)
 //     .get('/products/45')
