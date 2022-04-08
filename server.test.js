@@ -20,12 +20,15 @@ describe('GET /products retrieves a list of products', () => {
         expect(err).toBe(undefined);
       });
   });
+
   test('products data is an array', async () => {
     expect(Array.isArray(products)).toBe(true);
   });
+
   test('product data is an object', async () => {
     expect(typeof product).toBe('object');
   });
+
   test('product data has the expected properties', async () => {
     const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
     productProperties.forEach((productProperty) => {
@@ -40,6 +43,7 @@ describe('GET /products retrieves a list of products', () => {
       expect(product.features[0]).toHaveProperty(featureProperty);
     });
   });
+
   test('product features has the expected properties', async () => {
     const featuresProperties = ['feature', 'value'];
     featuresProperties.forEach((featureProperty) => {
