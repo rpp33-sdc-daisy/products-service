@@ -33,7 +33,13 @@ app.get('/products', (req, res) => {
 // GET /products/:product_id returns all product level information for a specified product id.
 app.get('/products/:product_id', (req, res) => {
   const productId = req.params.product_id;
-  const getProduct = `SELECT products.*, json_agg(json_build_object('feature', features.feature, 'value', features.value)) AS features from products JOIN features ON products.id=features.product_id WHERE products.id=${productId} GROUP BY products.id;`;
+  const getProduct = `SELECT products.*,
+    json_agg(json_build_object('feature', features.feature, 'value', features.value)) AS features
+    FROM products
+    JOIN features ON products.id=features.product_id
+    WHERE products.id=${productId}
+    GROUP BY products.id;`;
+
   client.query(getProduct)
     .then((response) => {
       res.send(response.rows);
@@ -71,7 +77,7 @@ app.get('/products/:product_id/styles', (req, res) => {
         )
       )
     )
-    AS results from products
+    AS results FROM products
     LEFT JOIN styles ON products.id=styles.product_id
     WHERE products.id=${productId}
     GROUP BY products.id;`;
