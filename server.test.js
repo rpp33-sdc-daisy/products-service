@@ -113,15 +113,25 @@ describe('GET /products/:product_id/styles returns the all styles available for 
       });
   });
 
-  expect(Array.isArray(styles)).toBe(true);
-  const styleProperties = ['style_id', 'name', 'original_price', 'sale_price', 'photos', 'skus'];
-  styleProperties.forEach((styleProperty) => {
-    expect(styles).toHaveProperty(styleProperty);
+  test('products styles is an array', () => {
+    expect(Array.isArray(styles)).toBe(true);
   });
 
-  expect(Array.isArray(styles.skus)).toBe(true);
-  const skusProperties = ['sku_id', 'quantity', 'size'];
-  skusProperties.forEach((skusProperty) => {
-    expect(styles).toHaveProperty(skusProperty);
+  test('products styles has the expected properties', () => {
+    const styleProperties = ['style_id', 'name', 'original_price', 'sale_price', 'photos', 'skus'];
+    styleProperties.forEach((styleProperty) => {
+      expect(styles).toHaveProperty(styleProperty);
+    });
+  });
+
+  test('products skus is an array', () => {
+    expect(Array.isArray(styles.skus)).toBe(true);
+  });
+
+  test('products skus has the expected properties', () => {
+    const skusProperties = ['sku_id', 'quantity', 'size'];
+    skusProperties.forEach((skusProperty) => {
+      expect(styles).toHaveProperty(skusProperty);
+    });
   });
 });
