@@ -18,7 +18,6 @@ client.connect();
 app.get('/products', (req, res) => {
   const count = req.query.count || 5;
   const page = (req.query.page || 0) * 20;
-  console.log(page);
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
   client.query(getAllProducts)
     .then((response) => {
