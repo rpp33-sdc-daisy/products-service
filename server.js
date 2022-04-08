@@ -58,6 +58,16 @@ app.get('/products/:product_id/styles', (req, res) => {
               )
             )
           FROM photos WHERE styles.id=photos.style_id
+        ),
+        'skus', (
+          SELECT
+          json_object_agg(skus.id,
+            json_build_object(
+              'quantity', skus.quantity,
+              'size', skus.size
+            )
+          )
+          FROM skus WHERE styles.id=skus.style_id
         )
       )
     )
