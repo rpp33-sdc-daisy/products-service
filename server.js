@@ -18,10 +18,10 @@ client.connect();
 app.get('/products', (req, res) => {
   const count = req.query.count || 5;
   const page = (req.query.page || 0) * 20;
-  const getAllProducts = `SELECT products.*, json_agg(json_build_object('id', features.id, 'feature', features.feature, 'value', features.value)) AS features from products JOIN features ON products.product_id=features.product_id GROUP BY products.product_id LIMIT ${count} OFFSET ${page};`;
+  console.log(page);
+  const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
   client.query(getAllProducts)
     .then((response) => {
-      client.end();
       res.send(response.rows);
     })
     .catch((err) => {
@@ -32,7 +32,18 @@ app.get('/products', (req, res) => {
 
 // GET /products/:product_id
 // Returns all product level information for a specified product id.
-
+app.get('/products/:product_id', (req, res) => {
+  const productId = req.params.product_id;
+  const getProduct = `SELECT products.*, json_agg(json_build_object('feature', features.feature, 'value', features.value)) AS features from products JOIN features ON products.id=features.product_id WHERE products.id=${productId} GROUP BY products.id;`;
+  client.query(getProduct)
+    .then((response) => {
+      res.send(response.rows);
+    })
+    .catch((err) => {
+      console.log('Error recieved when retrieving all products', err);
+      res.send(404);
+    });
+});
 // GET /products/:product_id/styles
 // Returns the all styles available for the given product.
 
