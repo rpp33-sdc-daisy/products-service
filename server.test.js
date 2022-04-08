@@ -135,7 +135,3 @@ describe('GET /products/:product_id/styles returns the all styles available for 
     });
   });
 });
-
-const testProducts = () => {
-
-};
