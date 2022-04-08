@@ -52,72 +52,76 @@ describe('GET /products retrieves a list of products', () => {
   });
 });
 
-// describe(() => {
-//   let products;
-//   let product;
-//   beforeAll(async () => {
-//     await request(app)
-//       .get('/products')
-//       .expect(200)
-//       .then((res) => {
-//         products = JSON.parse(res.res.text);
-//         [product] = products;
-//       })
-//       .catch((err) => {
-//         expect(err).toBe(undefined);
-//       });
-//   });
-// });
-// test('GET /products/:product_id returns all product level information for a specified product id', async () => {
-//   await request(app)
-//     .get('/products/45')
-//     .expect(200)
-//     .then((err, res) => {
-//       if (err) console.log(err);
-//       const product = res.body;
+describe('GET /products/:product_id returns all product level information for a specified product id', () => {
+  let products;
+  let product;
+  beforeAll(async () => {
+    await request(app)
+      .get('/products/45')
+      .expect(200)
+      .then((res) => {
+        products = JSON.parse(res.res.text);
+        [product] = products;
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
 
-//       /* PRODUCTS */
-//       expect(typeof product).toBe('object');
+  test('product data is an object', async () => {
+    expect(typeof product).toBe('object');
+  });
 
-//       const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
-//       productProperties.forEach((productProperty) => {
-//         expect(product).toHaveProperty(productProperty);
-//       });
+  test('product has correct id number', async () => {
+    expect(product.product_id).toBe(45);
+  });
 
-//       /* FEATURES */
-//       expect(Array.isArray(product.features)).toBe(true);
-//       const featuresProperties = ['feature', 'value'];
-//       featuresProperties.forEach((featureProperty) => {
-//         expect(product.features).toHaveProperty(featureProperty);
-//       });
-//     })
-//     .catch((err) => {
-//       expect(err).toBe(undefined);
-//     });
-// });
+  test('product data has the expected properties', async () => {
+    const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
+    productProperties.forEach((productProperty) => {
+      expect(product).toHaveProperty(productProperty);
+    });
+  });
 
-// test('GET /products/:product_id/styles returns the all styles available for the given product', async () => {
-//   await request(app)
-//     .get('/products/45/styles')
-//     .expect(200)
-//     .then((err, res) => {
-//       const styles = res.body;
+  test('product features is an array', async () => {
+    expect(Array.isArray(product.features)).toBe(true);
+    const featuresProperties = ['feature', 'value'];
+    featuresProperties.forEach((featureProperty) => {
+      expect(product.features[0]).toHaveProperty(featureProperty);
+    });
+  });
 
-//       /* STYLES */
-//       expect(Array.isArray(styles)).toBe(true);
-//       const styleProperties = ['style_id', 'name', 'original_price', 'sale_price', 'photos', 'skus'];
-//       styleProperties.forEach((styleProperty) => {
-//         expect(styles).toHaveProperty(styleProperty);
-//       });
+  test('product features has the expected properties', async () => {
+    const featuresProperties = ['feature', 'value'];
+    featuresProperties.forEach((featureProperty) => {
+      expect(product.features[0]).toHaveProperty(featureProperty);
+    });
+  });
+});
 
-//       /* SKUS */
-//       expect(Array.isArray(styles.skus)).toBe(true);
-//       const skusProperties = ['sku_id', 'quantity', 'size'];
-//       skusProperties.forEach((skusProperty) => {
-//         expect(styles).toHaveProperty(skusProperty);
-//       });
-//     })
-//     .catch((err) => {
-//       expect(err).toBe(undefined);
-//     });
-// });
+describe('GET /products/:product_id/styles returns the all styles available for the given product', () => {
+  let styles;
+  beforeAll(async () => {
+    await request(app)
+      .get('/products/45/styles')
+      .expect(200)
+      .then((res) => {
+        styles = res.body;
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
+
+  expect(Array.isArray(styles)).toBe(true);
+  const styleProperties = ['style_id', 'name', 'original_price', 'sale_price', 'photos', 'skus'];
+  styleProperties.forEach((styleProperty) => {
+    expect(styles).toHaveProperty(styleProperty);
+  });
+
+  expect(Array.isArray(styles.skus)).toBe(true);
+  const skusProperties = ['sku_id', 'quantity', 'size'];
+  skusProperties.forEach((skusProperty) => {
+    expect(styles).toHaveProperty(skusProperty);
+  });
+});
