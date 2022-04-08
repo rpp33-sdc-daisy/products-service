@@ -13,7 +13,7 @@ describe('GET /products retrieves a list of products', () => {
       .get('/products')
       .expect(200)
       .then((res) => {
-        products = JSON.parse(res.res.text);
+        products = res.body;
         [product] = products;
       })
       .catch((err) => {
@@ -135,3 +135,7 @@ describe('GET /products/:product_id/styles returns the all styles available for 
     });
   });
 });
+
+const testProducts = () => {
+
+};
