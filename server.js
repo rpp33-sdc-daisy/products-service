@@ -42,7 +42,7 @@ app.get('/products/:product_id', (req, res) => {
 
   client.query(getProduct)
     .then((response) => {
-      res.send(response.rows);
+      res.send(response.rows[0]);
     })
     .catch((err) => {
       console.log('Error recieved when retrieving all products', err);
@@ -52,7 +52,7 @@ app.get('/products/:product_id', (req, res) => {
 // GET /products/:product_id/styles returns the all styles available for the given product.
 app.get('/products/:product_id/styles', (req, res) => {
   const productId = req.params.product_id;
-  const getProduct = `SELECT products.id as product_id,
+  const getStyles = `SELECT products.id as product_id,
     json_agg(
       json_build_object(
         'style_id', styles.id, 'name', styles.name, 'original_price', styles.original_price, 'sale_price', styles.sale_price, 'default?', styles.default_style, 'photos', (
@@ -82,9 +82,9 @@ app.get('/products/:product_id/styles', (req, res) => {
     WHERE products.id=${productId}
     GROUP BY products.id;`;
 
-  client.query(getProduct)
+  client.query(getStyles)
     .then((response) => {
-      res.send(response.rows);
+      res.send(response.rows[0]);
     })
     .catch((err) => {
       console.log('Error recieved when retrieving all products', err);

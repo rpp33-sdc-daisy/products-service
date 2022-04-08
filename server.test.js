@@ -30,24 +30,9 @@ describe('GET /products retrieves a list of products', () => {
   });
 
   test('product data has the expected properties', async () => {
-    const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
+    const productProperties = ['id', 'name', 'category', 'slogan', 'description'];
     productProperties.forEach((productProperty) => {
       expect(product).toHaveProperty(productProperty);
-    });
-  });
-
-  test('product features is an array', async () => {
-    expect(Array.isArray(product.features)).toBe(true);
-    const featuresProperties = ['feature', 'value'];
-    featuresProperties.forEach((featureProperty) => {
-      expect(product.features[0]).toHaveProperty(featureProperty);
-    });
-  });
-
-  test('product features has the expected properties', async () => {
-    const featuresProperties = ['feature', 'value'];
-    featuresProperties.forEach((featureProperty) => {
-      expect(product.features[0]).toHaveProperty(featureProperty);
     });
   });
 });
@@ -73,11 +58,11 @@ describe('GET /products/:product_id returns all product level information for a 
   });
 
   test('product has correct id number', async () => {
-    expect(product.product_id).toBe(45);
+    expect(product.id).toBe(45);
   });
 
   test('product data has the expected properties', async () => {
-    const productProperties = ['product_id', 'product_name', 'category', 'slogan', 'description', 'features'];
+    const productProperties = ['id', 'name', 'category', 'slogan', 'description', 'features'];
     productProperties.forEach((productProperty) => {
       expect(product).toHaveProperty(productProperty);
     });
@@ -117,10 +102,17 @@ describe('GET /products/:product_id/styles returns the all styles available for 
     expect(Array.isArray(styles)).toBe(true);
   });
 
-  test('products styles has the expected properties', () => {
-    const styleProperties = ['style_id', 'name', 'original_price', 'sale_price', 'photos', 'skus'];
-    styleProperties.forEach((styleProperty) => {
+  test('product styles has the expected properties', () => {
+    const stylesProperties = ['product_id', 'results'];
+    stylesProperties.forEach((styleProperty) => {
       expect(styles).toHaveProperty(styleProperty);
+    });
+  });
+
+  test('product style has the expected properties', () => {
+    const stylesProperties = ['style_id', 'name', 'original_price', 'sale_price', 'default?', 'photos', 'skus'];
+    stylesProperties.forEach((styleProperty) => {
+      expect(styles[0]).toHaveProperty(styleProperty);
     });
   });
 
