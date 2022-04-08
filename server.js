@@ -30,8 +30,7 @@ app.get('/products', (req, res) => {
     });
 });
 
-// GET /products/:product_id
-// Returns all product level information for a specified product id.
+// GET /products/:product_id returns all product level information for a specified product id.
 app.get('/products/:product_id', (req, res) => {
   const productId = req.params.product_id;
   const getProduct = `SELECT products.*, json_agg(json_build_object('feature', features.feature, 'value', features.value)) AS features from products JOIN features ON products.id=features.product_id WHERE products.id=${productId} GROUP BY products.id;`;
@@ -44,8 +43,38 @@ app.get('/products/:product_id', (req, res) => {
       res.send(404);
     });
 });
-// GET /products/:product_id/styles
-// Returns the all styles available for the given product.
+// GET /products/:product_id/styles returns the all styles available for the given product.
+app.get('/products/:product_id/styles', (req, res) => {
+  const productId = req.params.product_id;
+  const getProduct = `SELECT products.id as product_id,
+    json_agg(
+      json_build_object(
+        'style_id', styles.id, 'name', styles.name, 'original_price', styles.original_price, 'sale_price', styles.sale_price, 'default?', styles.default_style, 'photos', (
+          SELECT
+            json_agg(
+              json_build_object(
+                'thumbnail_url', photos.thumbnail_url,
+                'url', photos.url
+              )
+            )
+          FROM photos WHERE styles.id=photos.style_id
+        )
+      )
+    )
+    AS results from products
+    LEFT JOIN styles ON products.id=styles.product_id
+    WHERE products.id=${productId}
+    GROUP BY products.id;`;
+
+  client.query(getProduct)
+    .then((response) => {
+      res.send(response.rows);
+    })
+    .catch((err) => {
+      console.log('Error recieved when retrieving all products', err);
+      res.send(404);
+    });
+});
 
 const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
