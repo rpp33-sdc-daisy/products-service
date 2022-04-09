@@ -36,7 +36,6 @@ describe('GET /products retrieves a list of products', () => {
     });
   });
 
-  // check that count and page works
   test('returns different products when count and page specified', async () => {
     let updatedProduct;
     await request(app)

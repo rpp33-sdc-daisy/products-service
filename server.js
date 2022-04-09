@@ -1,12 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const { Client } = require('pg');
 
-// http://127.0.0.1:8080/
 const client = new Client({
-  host: '127.0.0.1',
+  host: process.env.DB_HOST,
   database: 'products-service',
-  password: 'password',
-  port: 5432,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 const app = express();
@@ -21,11 +21,15 @@ app.get('/products', (req, res) => {
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
   client.query(getAllProducts)
     .then((response) => {
+      if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
       res.send(response.rows);
     })
     .catch((err) => {
-      console.log('Error recieved when retrieving all products', err);
-      res.send(404);
+      if (err.cause === 'Products not found') {
+        res.status(404).send('Products not found');
+      } else {
+        res.status(400).send('Error: Please make sure you are entering valid parameters.');
+      }
     });
 });
 
@@ -41,13 +45,18 @@ app.get('/products/:product_id', (req, res) => {
 
   client.query(getProduct)
     .then((response) => {
+      if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
       res.send(response.rows[0]);
     })
     .catch((err) => {
-      console.log('Error recieved when retrieving all products', err);
-      res.send(404);
+      if (err.cause === 'Product not found') {
+        res.status(404).send('Product not found: Please enter a different product id');
+      } else {
+        res.status(400).send('Error: Please try your request again.');
+      }
     });
 });
+
 // GET /products/:product_id/styles returns the all styles available for the given product.
 app.get('/products/:product_id/styles', (req, res) => {
   const productId = req.params.product_id;
@@ -83,11 +92,15 @@ app.get('/products/:product_id/styles', (req, res) => {
 
   client.query(getStyles)
     .then((response) => {
+      if (response.rows.length === 0) throw new Error('Styles not found', { cause: 'Styles not found' });
       res.send(response.rows[0]);
     })
     .catch((err) => {
-      console.log('Error recieved when retrieving all products', err);
-      res.send(404);
+      if (err.cause === 'Styles not found') {
+        res.status(404).send('Styles not found: Please enter a different product id');
+      } else {
+        res.status(400).send('Error: Please try your request again.');
+      }
     });
 });
 
@@ -95,5 +108,6 @@ const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
+// fix this
 exports.app = app;
 exports.server = server;
