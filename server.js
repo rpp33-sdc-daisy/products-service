@@ -108,6 +108,4 @@ const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
-// fix this
-exports.app = app;
-exports.server = server;
+module.exports = { app, server };

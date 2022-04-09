@@ -36,7 +36,7 @@ describe('GET /products retrieves a list of products', () => {
     });
   });
 
-  test('returns different products when count and page specified', async () => {
+  test('returns different products when count and page parameters are specified', async () => {
     let updatedProduct;
     await request(app)
       .get('/products?count=12&page=12')
