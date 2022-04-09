@@ -21,19 +21,34 @@ describe('GET /products retrieves a list of products', () => {
       });
   });
 
-  test('products data is an array', async () => {
+  test('products data is an array', () => {
     expect(Array.isArray(products)).toBe(true);
   });
 
-  test('product data is an object', async () => {
+  test('product data is an object', () => {
     expect(typeof product).toBe('object');
   });
 
   test('product data has the expected properties', async () => {
-    const productProperties = ['id', 'name', 'category', 'slogan', 'description'];
+    const productProperties = ['id', 'name', 'category', 'slogan', 'description', 'default_price'];
     productProperties.forEach((productProperty) => {
       expect(product).toHaveProperty(productProperty);
     });
+  });
+
+  // check that count and page works
+  test('returns different products when count and page specified', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products?count=12&page=12')
+      .expect(200)
+      .then((res) => {
+        [updatedProduct] = res.body;
+        expect(updatedProduct.id).not.toBe(product.id);
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
   });
 });
 
@@ -51,26 +66,26 @@ describe('GET /products/:product_id returns all product level information for a 
       });
   });
 
-  test('product data is an object', async () => {
+  test('product data is an object', () => {
     expect(typeof product).toBe('object');
   });
 
-  test('product has correct id number', async () => {
+  test('product has correct id number', () => {
     expect(product.id).toBe(45);
   });
 
-  test('product data has the expected properties', async () => {
+  test('product data has the expected properties', () => {
     const productProperties = ['id', 'name', 'category', 'slogan', 'description', 'features'];
     productProperties.forEach((productProperty) => {
       expect(product).toHaveProperty(productProperty);
     });
   });
 
-  test('product features is an array', async () => {
+  test('product features is an array', () => {
     expect(Array.isArray(product.features)).toBe(true);
   });
 
-  test('product features has the expected properties', async () => {
+  test('product features has the expected properties', () => {
     const featuresProperties = ['feature', 'value'];
     featuresProperties.forEach((featureProperty) => {
       expect(product.features[0]).toHaveProperty(featureProperty);
