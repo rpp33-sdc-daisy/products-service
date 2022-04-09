@@ -198,4 +198,30 @@ describe('GET /products/:product_id/styles returns the all styles available for 
       expect(styles.results[0].photos[0]).toHaveProperty(photoProperty);
     });
   });
+
+  test('returns error with invalid product id', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products/0/styles')
+      .expect(404)
+      .then((res) => {
+        expect(res.error.text).toBe('Styles not found: Please enter a different product id');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
+
+  test('returns error when parameter is invalid', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products/hello/styles')
+      .expect(400)
+      .then((res) => {
+        expect(res.error.text).toBe('Error: The product id must be a number. Please try again.');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
 });
