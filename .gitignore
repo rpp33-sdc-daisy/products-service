@@ -1,4 +1,4 @@
 node_modules
 queries.js
 .env
-./coverage
+coverage
