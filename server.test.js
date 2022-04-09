@@ -49,6 +49,32 @@ describe('GET /products retrieves a list of products', () => {
         expect(err).toBe(undefined);
       });
   });
+
+  test('returns error with invalid parameters', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products?count=-1')
+      .expect(400)
+      .then((res) => {
+        expect(res.error.text).toBe('Error: Please make sure you are entering valid parameters.');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
+
+  test('returns error when products not found', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products?page=1000000000')
+      .expect(400)
+      .then((res) => {
+        expect(res.error.text).toBe('Products not found');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
 });
 
 describe('GET /products/:product_id returns all product level information for a specified product id', () => {
