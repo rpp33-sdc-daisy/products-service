@@ -67,7 +67,7 @@ describe('GET /products retrieves a list of products', () => {
     let updatedProduct;
     await request(app)
       .get('/products?page=1000000000')
-      .expect(400)
+      .expect(404)
       .then((res) => {
         expect(res.error.text).toBe('Products not found');
       })
