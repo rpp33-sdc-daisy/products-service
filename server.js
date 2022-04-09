@@ -52,7 +52,7 @@ app.get('/products/:product_id', (req, res) => {
       if (err.cause === 'Product not found') {
         res.status(404).send('Product not found: Please enter a different product id');
       } else {
-        res.status(400).send('Error: Please try your request again.');
+        res.status(400).send('Error: The product id must be a number. Please try again.');
       }
     });
 });

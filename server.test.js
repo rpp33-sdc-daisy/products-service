@@ -67,7 +67,7 @@ describe('GET /products retrieves a list of products', () => {
     let updatedProduct;
     await request(app)
       .get('/products?page=1000000000')
-      .expect(400)
+      .expect(404)
       .then((res) => {
         expect(res.error.text).toBe('Products not found');
       })
@@ -115,6 +115,32 @@ describe('GET /products/:product_id returns all product level information for a 
     featuresProperties.forEach((featureProperty) => {
       expect(product.features[0]).toHaveProperty(featureProperty);
     });
+  });
+
+  test('returns error with invalid product id', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products/0')
+      .expect(404)
+      .then((res) => {
+        expect(res.error.text).toBe('Product not found: Please enter a different product id');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
+
+  test('returns error when parameter is invalid', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products/hello')
+      .expect(400)
+      .then((res) => {
+        expect(res.error.text).toBe('Error: The product id must be a number. Please try again.');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
   });
 });
 
