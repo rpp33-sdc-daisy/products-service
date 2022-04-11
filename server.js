@@ -17,7 +17,7 @@ client.connect();
 // GET /products Retrieves the list of products.
 app.get('/products', (req, res) => {
   const count = req.query.count || 5;
-  const page = (req.query.page || 0) * 20;
+  const page = (req.query.page || 0) * count;
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
   client.query(getAllProducts)
     .then((response) => {
