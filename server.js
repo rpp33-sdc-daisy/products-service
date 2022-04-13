@@ -33,6 +33,30 @@ app.get('/products', (req, res) => {
     });
 });
 
+// GET /products/:product_id returns all product level information for a specified product id.
+app.get('/products/:product_id', (req, res) => {
+  const productId = req.params.product_id;
+  const getProduct = `SELECT products.*,
+    json_agg(json_build_object('feature', features.feature, 'value', features.value)) AS features
+    FROM products
+    JOIN features ON products.id=features.product_id
+    WHERE products.id=${productId}
+    GROUP BY products.id;`;
+
+  client.query(getProduct)
+    .then((response) => {
+      if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
+      res.send(response.rows[0]);
+    })
+    .catch((err) => {
+      if (err.cause === 'Product not found') {
+        res.status(404).send('Product not found: Please enter a different product id');
+      } else {
+        res.status(400).send('Error: The product id must be a number. Please try again.');
+      }
+    });
+});
+
 const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });

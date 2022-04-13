@@ -76,3 +76,70 @@ describe('GET /products retrieves a list of products', () => {
       });
   });
 });
+
+describe('GET /products/:product_id returns all product level information for a specified product id', () => {
+  let product;
+  beforeAll(async () => {
+    await request(app)
+      .get('/products/45')
+      .expect(200)
+      .then((res) => {
+        product = res.body;
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
+
+  test('product data is an object', () => {
+    expect(typeof product).toBe('object');
+  });
+
+  test('product has correct id number', () => {
+    expect(product.id).toBe(45);
+  });
+
+  test('product data has the expected properties', () => {
+    const productProperties = ['id', 'name', 'category', 'slogan', 'description', 'features'];
+    productProperties.forEach((productProperty) => {
+      expect(product).toHaveProperty(productProperty);
+    });
+  });
+
+  test('product features is an array', () => {
+    expect(Array.isArray(product.features)).toBe(true);
+  });
+
+  test('product features has the expected properties', () => {
+    const featuresProperties = ['feature', 'value'];
+    featuresProperties.forEach((featureProperty) => {
+      expect(product.features[0]).toHaveProperty(featureProperty);
+    });
+  });
+
+  test('returns error with invalid product id', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products/0')
+      .expect(404)
+      .then((res) => {
+        expect(res.error.text).toBe('Product not found: Please enter a different product id');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
+
+  test('returns error when parameter is invalid', async () => {
+    let updatedProduct;
+    await request(app)
+      .get('/products/hello')
+      .expect(400)
+      .then((res) => {
+        expect(res.error.text).toBe('Error: The product id must be a number. Please try again.');
+      })
+      .catch((err) => {
+        expect(err).toBe(undefined);
+      });
+  });
+});
