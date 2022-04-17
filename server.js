@@ -1,25 +1,16 @@
 require('dotenv').config();
 const express = require('express');
-const { Client } = require('pg');
-
-const client = new Client({
-  host: process.env.DB_HOST,
-  database: 'products-service',
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
+const { pool } = require('./db.js');
 
 const app = express();
 const port = 3000;
-
-client.connect();
 
 // GET /products Retrieves the list of products.
 app.get('/products', (req, res) => {
   const count = req.query.count || 5;
   const page = (req.query.page || 0) * count;
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
-  client.query(getAllProducts)
+  pool.query(getAllProducts)
     .then((response) => {
       if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
       res.send(response.rows);
@@ -43,7 +34,7 @@ app.get('/products/:product_id', (req, res) => {
     WHERE products.id=${productId}
     GROUP BY products.id;`;
 
-  client.query(getProduct)
+  pool.query(getProduct)
     .then((response) => {
       if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
       res.send(response.rows[0]);
@@ -90,7 +81,7 @@ app.get('/products/:product_id/styles', (req, res) => {
     WHERE products.id=${productId}
     GROUP BY products.id;`;
 
-  client.query(getStyles)
+  pool.query(getStyles)
     .then((response) => {
       if (response.rows.length === 0) throw new Error('Styles not found', { cause: 'Styles not found' });
       res.send(response.rows[0]);
