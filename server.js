@@ -10,17 +10,22 @@ app.get('/products', (req, res) => {
   const count = req.query.count || 5;
   const page = (req.query.page || 0) * count;
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
-  pool.query(getAllProducts)
-    .then((response) => {
-      if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
-      res.send(response.rows);
-    })
-    .catch((err) => {
-      if (err.cause === 'Products not found') {
-        res.status(404).send('Products not found');
-      } else {
-        res.status(400).send('Error: Please make sure you are entering valid parameters.');
-      }
+  pool.connect()
+    .then((client) => {
+      client.query(getAllProducts)
+        .then((response) => {
+          client.release();
+          if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
+          res.send(response.rows);
+        })
+        .catch((err) => {
+          client.release();
+          if (err.cause === 'Products not found') {
+            res.status(404).send('Products not found');
+          } else {
+            res.status(400).send('Error: Please make sure you are entering valid parameters.');
+          }
+        });
     });
 });
 
@@ -34,17 +39,22 @@ app.get('/products/:product_id', (req, res) => {
     WHERE products.id=${productId}
     GROUP BY products.id;`;
 
-  pool.query(getProduct)
-    .then((response) => {
-      if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
-      res.send(response.rows[0]);
-    })
-    .catch((err) => {
-      if (err.cause === 'Product not found') {
-        res.status(404).send('Product not found: Please enter a different product id');
-      } else {
-        res.status(400).send('Error: The product id must be a number. Please try again.');
-      }
+  pool.connect()
+    .then((client) => {
+      client.query(getProduct)
+        .then((response) => {
+          client.release();
+          if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
+          res.send(response.rows[0]);
+        })
+        .catch((err) => {
+          client.release();
+          if (err.cause === 'Product not found') {
+            res.status(404).send('Product not found: Please enter a different product id');
+          } else {
+            res.status(400).send('Error: The product id must be a number. Please try again.');
+          }
+        });
     });
 });
 
@@ -81,17 +91,22 @@ app.get('/products/:product_id/styles', (req, res) => {
     WHERE products.id=${productId}
     GROUP BY products.id;`;
 
-  pool.query(getStyles)
-    .then((response) => {
-      if (response.rows.length === 0) throw new Error('Styles not found', { cause: 'Styles not found' });
-      res.send(response.rows[0]);
-    })
-    .catch((err) => {
-      if (err.cause === 'Styles not found') {
-        res.status(404).send('Styles not found: Please enter a different product id');
-      } else {
-        res.status(400).send('Error: The product id must be a number. Please try again.');
-      }
+  pool.connect()
+    .then((client) => {
+      client.query(getStyles)
+        .then((response) => {
+          client.release();
+          if (response.rows.length === 0) throw new Error('Styles not found', { cause: 'Styles not found' });
+          res.send(response.rows[0]);
+        })
+        .catch((err) => {
+          client.release();
+          if (err.cause === 'Styles not found') {
+            res.status(404).send('Styles not found: Please enter a different product id');
+          } else {
+            res.status(400).send('Error: The product id must be a number. Please try again.');
+          }
+        });
     });
 });
 
