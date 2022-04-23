@@ -1,4 +1,5 @@
 # products-service
+
 The main goal of this project was to create a backend system that could support the increased traffic and data volume of an existing front-end retail application.
 
 The back end system was broken into three micro-services (products, rating and reviews and questions and answers).
