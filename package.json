@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --coverage",
     "start": "nodemon server.js",
-    "lint": "./node_modules/.bin/eslint"
+    "lint": "./node_modules/.bin/eslint",
+    "stress-test": "k6 run k6.script.js"
   },
   "repository": {
     "type": "git",
