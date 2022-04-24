@@ -8,4 +8,4 @@ RUN npm install
 
 COPY . /products
 
-CMD ["nodemon", "server.js"]
+CMD ["npm", "run", "start"]
