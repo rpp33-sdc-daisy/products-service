@@ -20,6 +20,7 @@ app.get('/products', (req, res) => {
         })
         .catch((err) => {
           client.release();
+          console.log(err);
           if (err.cause === 'Products not found') {
             res.status(404).send('Products not found');
           } else {
