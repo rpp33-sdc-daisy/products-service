@@ -25,7 +25,6 @@ app.get('/products', (req, res) => {
         })
         .catch((err) => {
           client.release();
-          console.log(err);
           if (err.cause === 'Products not found') {
             res.status(404).send('Products not found');
           } else {
@@ -54,6 +53,7 @@ app.get('/products/:product_id', (req, res) => {
           res.send(response.rows[0]);
         })
         .catch((err) => {
+          console.log(err);
           client.release();
           if (err.cause === 'Product not found') {
             res.status(404).send('Product not found: Please enter a different product id');
