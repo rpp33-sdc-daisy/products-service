@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const { createClient } = require('redis');
 const path = require('path');
 const { pool } = require('./db.js');
 
@@ -15,11 +16,21 @@ app.get('/products', (req, res) => {
   const count = req.query.count || 5;
   const page = (req.query.page || 0) * count;
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
+  const redisClient = createClient({
+    url: 'http://44.204.116.83:6379/',
+  });
   pool.connect()
     .then((client) => {
       client.query(getAllProducts)
         .then((response) => {
           client.release();
+          (async () => {
+            redisClient.on('error', (err) => console.log('Redis Client Error', err));
+            await redisClient.connect();
+            await redisClient.set('key', 'value');
+            const value = await redisClient.get('key');
+            console.log(value);
+          })();
           if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
           res.send(response.rows);
         })
