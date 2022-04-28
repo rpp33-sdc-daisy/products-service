@@ -17,8 +17,8 @@ app.get('/products', (req, res) => {
   const page = (req.query.page || 0) * count;
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
   const redisClient = createClient({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
+    host: '44.204.116.83',
+    port: 6379,
   });
   pool.connect()
     .then((client) => {
