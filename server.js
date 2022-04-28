@@ -4,9 +4,13 @@ const { createClient } = require('redis');
 const path = require('path');
 const { pool } = require('./db.js');
 
-const redisClient = createClient({
-  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-});
+let redisClient;
+(async () => {
+  redisClient = createClient({
+    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  });
+  await redisClient.connect();
+})();
 
 const app = express();
 const port = 3000;
@@ -27,7 +31,6 @@ app.get('/products', (req, res) => {
           client.release();
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
-            await redisClient.connect();
             const key = `GET PRODUCTS: count - ${count}, page - ${page}`;
             const value = await redisClient.get(key);
             if (value) {
@@ -37,7 +40,6 @@ app.get('/products', (req, res) => {
               await redisClient.set(key, JSON.stringify(response.rows));
               res.send(response.rows);
             }
-            await redisClient.quit();
           })();
         })
         .catch((err) => {
@@ -68,9 +70,6 @@ app.get('/products/:product_id', (req, res) => {
           client.release();
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
-            if (!redisClient.connected) {
-              await redisClient.connect();
-            }
             const key = `GET PRODUCT: ${productId}`;
             const value = await redisClient.get(key);
             if (value) {
@@ -80,11 +79,9 @@ app.get('/products/:product_id', (req, res) => {
               await redisClient.set(key, JSON.stringify(response.rows));
               res.send(response.rows[0]);
             }
-            redisClient.quit();
           })();
         })
         .catch((err) => {
-          console.log(err);
           client.release();
           if (err.cause === 'Product not found') {
             res.status(404).send('Product not found: Please enter a different product id');
@@ -135,9 +132,6 @@ app.get('/products/:product_id/styles', (req, res) => {
           client.release();
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
-            if (!redisClient.connected) {
-              await redisClient.connect();
-            }
             const key = `GET STYLES: ${productId}`;
             const value = await redisClient.get(key);
             if (value) {
@@ -147,7 +141,6 @@ app.get('/products/:product_id/styles', (req, res) => {
               await redisClient.set(key, JSON.stringify(response.rows));
               res.send(response.rows[0]);
             }
-            redisClient.quit();
           })();
         })
         .catch((err) => {
