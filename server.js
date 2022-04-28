@@ -77,8 +77,6 @@ app.get('/products/:product_id', (req, res) => {
               res.send(response.rows[0]);
             }
           })();
-          if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
-          res.send(response.rows[0]);
         })
         .catch((err) => {
           console.log(err);
@@ -130,8 +128,19 @@ app.get('/products/:product_id/styles', (req, res) => {
       client.query(getStyles)
         .then((response) => {
           client.release();
-          if (response.rows.length === 0) throw new Error('Styles not found', { cause: 'Styles not found' });
-          res.send(response.rows[0]);
+          (async () => {
+            redisClient.on('error', (err) => console.log('Redis Client Error', err));
+            await redisClient.connect();
+            const key = `GET STYLES: ${productId}`;
+            const value = await redisClient.get(key);
+            if (value) {
+              res.send(JSON.parse(value));
+            } else {
+              if (response.rows.length === 0) throw new Error('Styles not found', { cause: 'Styles not found' });
+              await redisClient.set(key, JSON.stringify(response.rows));
+              res.send(response.rows[0]);
+            }
+          })();
         })
         .catch((err) => {
           client.release();
