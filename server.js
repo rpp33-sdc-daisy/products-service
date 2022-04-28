@@ -28,7 +28,7 @@ app.get('/products', (req, res) => {
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
             await redisClient.connect();
-            const key = `count: ${count}page: ${page}`;
+            const key = `GET PRODUCTS: count - ${count}, page - ${page}`;
             const value = await redisClient.get(key);
             if (value) {
               res.send(JSON.parse(value));
