@@ -26,7 +26,9 @@ app.get('/products', (req, res) => {
           client.release();
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
-            await redisClient.connect();
+            if (!redisClient.connected) {
+              await redisClient.connect();
+            }
             const key = `count: ${count}page: ${page}`;
             const value = await redisClient.get(key);
             if (value) {
@@ -66,7 +68,9 @@ app.get('/products/:product_id', (req, res) => {
           client.release();
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
-            await redisClient.connect();
+            if (!redisClient.connected) {
+              await redisClient.connect();
+            }
             const key = `GET PRODUCT: ${productId}`;
             const value = await redisClient.get(key);
             if (value) {
@@ -130,7 +134,9 @@ app.get('/products/:product_id/styles', (req, res) => {
           client.release();
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
-            await redisClient.connect();
+            if (!redisClient.connected) {
+              await redisClient.connect();
+            }
             const key = `GET STYLES: ${productId}`;
             const value = await redisClient.get(key);
             if (value) {
