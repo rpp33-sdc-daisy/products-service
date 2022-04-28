@@ -31,13 +31,14 @@ app.get('/products', (req, res) => {
             const key = `GET PRODUCTS: count - ${count}, page - ${page}`;
             const value = await redisClient.get(key);
             if (value) {
+              redisClient.quit();
               res.send(JSON.parse(value));
             } else {
               if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
               await redisClient.set(key, JSON.stringify(response.rows));
+              redisClient.quit();
               res.send(response.rows);
             }
-            redisClient.quit();
           })();
         })
         .catch((err) => {
