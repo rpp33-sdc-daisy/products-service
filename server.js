@@ -27,12 +27,17 @@ app.get('/products', (req, res) => {
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
             await redisClient.connect();
-            await redisClient.set('key', 'value');
-            const value = await redisClient.get('key');
-            console.log(value);
+            const key = `count: ${count}page: ${page}`;
+            const value = await redisClient.get(key);
+            if (value) {
+              console.log(value);
+              res.send(JSON.parse(value));
+            } else {
+              if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
+              await redisClient.set(key, JSON.stringify(response.rows));
+              res.send(response.rows);
+            }
           })();
-          if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
-          res.send(response.rows);
         })
         .catch((err) => {
           client.release();
