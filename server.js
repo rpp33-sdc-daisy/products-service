@@ -4,6 +4,9 @@ const { createClient } = require('redis');
 const path = require('path');
 const { pool } = require('./db.js');
 
+const redisClient = createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+});
 const app = express();
 const port = 3000;
 
@@ -16,9 +19,6 @@ app.get('/products', (req, res) => {
   const count = req.query.count || 5;
   const page = (req.query.page || 0) * count;
   const getAllProducts = `SELECT * FROM products LIMIT ${count} OFFSET ${page};`;
-  const redisClient = createClient({
-    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-  });
   pool.connect()
     .then((client) => {
       client.query(getAllProducts)
@@ -64,6 +64,19 @@ app.get('/products/:product_id', (req, res) => {
       client.query(getProduct)
         .then((response) => {
           client.release();
+          (async () => {
+            redisClient.on('error', (err) => console.log('Redis Client Error', err));
+            await redisClient.connect();
+            const key = `GET PRODUCT: ${productId}`;
+            const value = await redisClient.get(key);
+            if (value) {
+              res.send(JSON.parse(value));
+            } else {
+              if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
+              await redisClient.set(key, JSON.stringify(response.rows));
+              res.send(response.rows[0]);
+            }
+          })();
           if (response.rows.length === 0) throw new Error('Product not found', { cause: 'Product not found' });
           res.send(response.rows[0]);
         })
