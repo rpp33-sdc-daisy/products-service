@@ -30,7 +30,6 @@ app.get('/products', (req, res) => {
             const key = `count: ${count}page: ${page}`;
             const value = await redisClient.get(key);
             if (value) {
-              console.log(value);
               res.send(JSON.parse(value));
             } else {
               if (response.rows.length === 0) throw new Error('Products not found', { cause: 'Products not found' });
