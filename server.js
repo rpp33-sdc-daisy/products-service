@@ -4,11 +4,11 @@ const { createClient } = require('redis');
 const path = require('path');
 const { pool } = require('./db.js');
 
-let redisClient;
+const redisClient = createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+});
+
 (async () => {
-  redisClient = createClient({
-    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-  });
   await redisClient.connect();
 })();
 
@@ -28,7 +28,6 @@ app.get('/products', (req, res) => {
     .then((client) => {
       client.query(getAllProducts)
         .then((response) => {
-          client.release();
           (async () => {
             redisClient.on('error', (err) => console.log('Redis Client Error', err));
             const key = `GET PRODUCTS: count - ${count}, page - ${page}`;
@@ -41,6 +40,7 @@ app.get('/products', (req, res) => {
               res.send(response.rows);
             }
           })();
+          client.release();
         })
         .catch((err) => {
           client.release();
