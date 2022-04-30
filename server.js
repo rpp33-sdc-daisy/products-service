@@ -117,7 +117,7 @@ app.get('/products/:product_id/styles', (req, res) => {
 });
 
 const server = app.listen(port, '0.0.0.0', () => {
-  console.log(`Listening on port ${port}`);
+  console.log(`Listening on port ${port}!`);
 });
 
 module.exports = { app, server };
