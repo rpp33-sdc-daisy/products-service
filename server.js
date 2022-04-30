@@ -15,7 +15,7 @@ app.get('/loaderio-23dacf0ac7ed85c1bee234d4d72e9653.txt', (req, res) => {
 app.get('/products', (req, res) => {
   const count = req.query.count || 5;
   const page = (req.query.page || 0) * count;
-  const getAllProducts = `SELECT * FROM products ORDER BY LIMIT ${count} OFFSET ${page};`;
+  const getAllProducts = `SELECT * FROM products ORDER BY id LIMIT ${count} OFFSET ${page};`;
   pool.connect()
     .then((client) => {
       client.query(getAllProducts)
