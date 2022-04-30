@@ -1,9 +1,14 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const { pool } = require('./db.js');
 
 const app = express();
 const port = 3000;
+
+app.get('/loaderio-23dacf0ac7ed85c1bee234d4d72e9653.txt', (req, res) => {
+  res.sendFile(path.join(__dirname, 'loaderio-23dacf0ac7ed85c1bee234d4d72e9653.txt'));
+});
 
 // GET /products Retrieves the list of products.
 app.get('/products', (req, res) => {
