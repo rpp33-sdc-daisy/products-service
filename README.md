@@ -4,7 +4,7 @@ The main goal of this project was to create a backend system that could support 
 
 The back end system was broken into three micro-services (products, rating and reviews and questions and answers).
 
-This repository is for the products service, which currently includes a database for product data and an API. The API supports 3 endpoints: GET returns all product data, GET returns product data given a product id, GET returns all styles given a product id.
+This repository is for the products service. The API supports 3 endpoints: GET returns all product data, GET returns product data given a product id, GET returns all styles given a product id.
 
 
 
